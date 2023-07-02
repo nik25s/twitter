@@ -15,19 +15,25 @@ class TextFieldInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final inputBorder =
-        OutlineInputBorder(borderSide: Divider.createBorderSide(context));
-    return TextField(
-      decoration: InputDecoration(
-          border: inputBorder,
-          focusedBorder: inputBorder,
-          enabledBorder: inputBorder,
-          filled: true,
-          contentPadding: const EdgeInsets.all(8),
-          hintText: label),
-      keyboardType: textInputType,
-      controller: textEditingController,
-      obscureText: isPass,
+    final inputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(18)),
+      borderSide: Divider.createBorderSide(context),
     );
+    return Container(
+        margin: EdgeInsets.symmetric(horizontal: 18.0),
+        child: TextField(
+          decoration: InputDecoration(
+              focusColor: Colors.blue,
+              fillColor: Colors.white,
+              border: inputBorder,
+              focusedBorder: inputBorder,
+              enabledBorder: inputBorder,
+              filled: true,
+              contentPadding: const EdgeInsets.all(8),
+              hintText: label),
+          keyboardType: textInputType,
+          controller: textEditingController,
+          obscureText: isPass,
+        ));
   }
 }
