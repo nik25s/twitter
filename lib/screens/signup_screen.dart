@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:twitter/resources/auth_methods.dart';
 import 'package:twitter/screens/login_screen.dart';
 import 'package:twitter/utils/pick_image.dart';
-
+import 'package:twitter/utils/pick_image.dart';
 import 'package:twitter/widgets/text_field_input.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -19,11 +20,30 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   Uint8List? _image;
+  bool _isLoading = false;
 
   void selectImage() async {
     Uint8List im = await pickImage(ImageSource.gallery);
     setState(() {
       _image = im;
+    });
+  }
+
+  void signUpUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().signUpUser(
+        username: _usernameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        bio: _bioController.text,
+        file: _image!);
+    if (res != "success") {
+      showSnackBar(res, context);
+    }
+    setState(() {
+      _isLoading = false;
     });
   }
 
@@ -116,15 +136,22 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             const SizedBox(height: 24),
             InkWell(
-              onTap: () {},
+              onTap: signUpUser,
               child: Container(
+                child: _isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text(
+                        'Sign up',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
                 margin: EdgeInsets.symmetric(horizontal: 18.0),
                 width: double.infinity,
                 height: 50,
-                child: Text(
-                  'Sign up',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: ShapeDecoration(
