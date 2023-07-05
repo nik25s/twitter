@@ -2,6 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:twitter/resources/auth_methods.dart';
+import 'package:twitter/responsive/mobile_screen_layout.dart';
+import 'package:twitter/responsive/responsive_layout.dart';
+import 'package:twitter/responsive/web_screen_layout.dart';
 import 'package:twitter/screens/login_screen.dart';
 import 'package:twitter/utils/pick_image.dart';
 import 'package:twitter/utils/pick_image.dart';
@@ -41,6 +44,11 @@ class _SignupScreenState extends State<SignupScreen> {
         file: _image!);
     if (res != "success") {
       showSnackBar(res, context);
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: ((context) => const ResponsiveLayout(
+              mobileScreenLayout: MobileScreenLayout(),
+              webScreenLayout: WebScreenLayout()))));
     }
     setState(() {
       _isLoading = false;
@@ -140,9 +148,7 @@ class _SignupScreenState extends State<SignupScreen> {
               child: Container(
                 child: _isLoading
                     ? const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                        ),
+                        child: CircularProgressIndicator(color: Colors.white),
                       )
                     : const Text(
                         'Sign up',

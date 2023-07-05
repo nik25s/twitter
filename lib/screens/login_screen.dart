@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:twitter/resources/auth_methods.dart';
+import 'package:twitter/responsive/responsive_layout.dart';
 import 'package:twitter/screens/signup_screen.dart';
+import 'package:twitter/utils/pick_image.dart';
 import 'package:twitter/widgets/text_field_input.dart';
+import 'package:twitter/resources/auth_methods.dart';
+
+import '../responsive/mobile_screen_layout.dart';
+import '../responsive/web_screen_layout.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +24,25 @@ class _LoginScreenState extends State<LoginScreen> {
   void navigateToSignup() {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => const SignupScreen()));
+  }
+
+  void loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().loginUser(
+        email: _emailController.text, password: _passwordController.text);
+    if (res == 'success') {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: ((context) => const ResponsiveLayout(
+              mobileScreenLayout: MobileScreenLayout(),
+              webScreenLayout: WebScreenLayout()))));
+    } else {
+      showSnackBar(res, context);
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -69,16 +95,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 24,
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: loginUser,
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 18.0),
                       width: double.infinity,
                       height: 50,
-                      child: Text(
-                        'Log in',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
+                      child: _isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text(
+                              'Log in',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
                       alignment: Alignment.center,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: ShapeDecoration(
