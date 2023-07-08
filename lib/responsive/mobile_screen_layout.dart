@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:twitter/models/user.dart' as model;
 import 'package:twitter/providers/user_providers.dart';
 import 'package:twitter/screens/add_tweet_screen.dart';
+import 'package:twitter/utils/global_variables.dart';
 
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({super.key});
@@ -51,14 +52,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: PageView(
-        children: [
-          Text('feed'),
-          Text('search'),
-          Text('audio'),
-          Text('notification'),
-          Text('message'),
-          Text('add tweet')
-        ],
+        children: homeScreenItems,
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         onPageChanged: onPageChanged,
