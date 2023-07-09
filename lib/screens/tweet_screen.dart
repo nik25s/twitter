@@ -28,7 +28,7 @@ class TweetScreen extends StatelessWidget {
               ),
               Image.asset(
                 'assets/logo.png',
-                height: 47,
+                height: 44,
               ),
             ],
           ),
@@ -37,7 +37,6 @@ class TweetScreen extends StatelessWidget {
             preferredSize: Size.fromHeight(5),
             child: Divider(
               color: Colors.grey,
-              // thickness: ,
             ),
           ),
         ),

@@ -33,15 +33,23 @@ class FirestoreMethods {
         likes: [],
       );
 
-      if (photoUrl != null) {
-        _firestore.collection('posts').doc(postId).set(post.toJson());
-      } else {
-        _firestore.collection('posts').doc(postId).set(post.toJsonWithoutUrl());
-      }
+      // if (photoUrl != null) {
+      _firestore.collection('posts').doc(postId).set(post.toJson());
+      // } else {
+      // _firestore.collection('posts').doc(postId).set(post.toJsonWithoutUrl());
+      // }
       res = 'success';
     } catch (err) {
       res = err.toString();
     }
     return res;
+  }
+
+  Future<void> deletePost(String postId) async {
+    try {
+      await _firestore.collection('post').doc(postId).delete();
+    } catch (err) {
+      print(err.toString());
+    }
   }
 }

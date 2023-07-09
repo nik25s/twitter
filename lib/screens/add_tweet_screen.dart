@@ -132,7 +132,8 @@ class _AddTweetScreenState extends State<AddTweetScreen> {
           TextButton(
               onPressed: () {
                 if (_tweetController.text.isNotEmpty) {
-                  postImage(user.uid, user.username, user.photoUrl);
+                  postImage(user.uid, user.username, user.photoUrl,
+                      file: _file);
                 }
               },
               child: Text(
