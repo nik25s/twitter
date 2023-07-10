@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter/resources/firestore_methods.dart';
 import 'package:twitter/utils/global_variables.dart';
+import 'package:twitter/widgets/like_animation.dart';
 import '../models/user.dart';
 import '../providers/user_providers.dart';
 
@@ -189,7 +190,7 @@ class _TweetCardState extends State<TweetCard> {
     final bool hasImage = widget.snap['postUrl'] != null;
 
     return Container(
-      margin: EdgeInsets.only(right: 33),
+      margin: EdgeInsets.only(right: 25),
       width: double.infinity,
       decoration: BoxDecoration(
         border: Border.all(
@@ -230,10 +231,11 @@ class _TweetCardState extends State<TweetCard> {
                       style: TextStyle(color: Colors.grey, fontSize: 16),
                     ),
                     const SizedBox(width: 5),
-                    const SizedBox(width: 5),
+                    // const SizedBox(width: 5),
                     Text(
+                      // '· $tweetTimeAgo',
                       '· 1h',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -348,17 +350,30 @@ class _TweetCardState extends State<TweetCard> {
                       ),
                       SizedBox(width: 20),
                       Expanded(
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.favorite_border,
-                            color: Colors.white54,
-                            size: 20,
+                        child: LikeAnimation(
+                          isAnimating: widget.snap['likes'].contains(user.uid),
+                          child: IconButton(
+                            onPressed: () async {
+                              await FirestoreMethods().LikeTweet(
+                                widget.snap['postId'],
+                                user.uid,
+                                widget.snap['likes'],
+                              );
+                            },
+                            icon: widget.snap['likes'].contains(user.uid)
+                                ? const Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  )
+                                : Icon(
+                                    Icons.favorite_border,
+                                    color: Colors.grey,
+                                  ),
                           ),
                         ),
                       ),
                       Text(
-                        '1',
+                        '${widget.snap['likes'].length}',
                         style: TextStyle(color: Colors.grey),
                       ),
                     ],

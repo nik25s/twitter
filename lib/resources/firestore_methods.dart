@@ -31,6 +31,7 @@ class FirestoreMethods {
         postUrl: photoUrl,
         profImage: profImage,
         likes: [],
+        retweet: [],
       );
 
       // if (photoUrl != null) {
@@ -50,6 +51,23 @@ class FirestoreMethods {
       await _firestore.collection('posts').doc(postId).delete();
     } catch (err) {
       print(err.toString());
+    }
+  }
+
+  Future<void> LikeTweet(String postId, String uid, List<dynamic> likes) async {
+    try {
+      final postRef = _firestore.collection('posts').doc(postId);
+      if (likes.contains(uid)) {
+        await postRef.update({
+          'likes': FieldValue.arrayRemove([uid]),
+        });
+      } else {
+        await postRef.update({
+          'likes': FieldValue.arrayUnion([uid]),
+        });
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 }

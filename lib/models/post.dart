@@ -9,6 +9,7 @@ class Post {
   final String? postUrl;
   final String profImage;
   final likes;
+  final retweet;
 
   const Post({
     required this.tweet,
@@ -19,6 +20,7 @@ class Post {
     this.postUrl,
     required this.profImage,
     required this.likes,
+    required this.retweet,
   });
 
   Map<String, dynamic> toJson() => {
@@ -30,6 +32,7 @@ class Post {
         "postUrl": postUrl,
         "profImage": profImage,
         "likes": likes,
+        "retweet": retweet,
       };
 
   Map<String, dynamic> toJsonWithoutUrl() => {
@@ -53,6 +56,7 @@ class Post {
       postUrl: snapshot['postUrl'],
       profImage: snapshot['profImage'],
       likes: snapshot['likes'],
+      retweet: snapshot['retweet'],
     );
   }
 }
