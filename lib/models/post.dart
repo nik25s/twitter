@@ -43,6 +43,7 @@ class Post {
         "datePublished": datePublished,
         "profImage": profImage,
         "likes": likes,
+        "retweet": retweet,
       };
 
   static Post fromSnap(DocumentSnapshot snap) {

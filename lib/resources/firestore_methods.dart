@@ -70,4 +70,24 @@ class FirestoreMethods {
       print(e.toString());
     }
   }
+
+  Future<void> doReTweet(
+      String postId, String uid, List<dynamic> retweet) async {
+    try {
+      final postRef = _firestore.collection('posts').doc(postId);
+      if (retweet.contains(uid)) {
+        await postRef.update({
+          'retweet': FieldValue.arrayRemove([uid]),
+          'retweetCount': FieldValue.increment(-1),
+        });
+      } else {
+        await postRef.update({
+          'retweet': FieldValue.arrayUnion([uid]),
+          'retweetCount': FieldValue.increment(1),
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

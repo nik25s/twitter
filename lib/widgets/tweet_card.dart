@@ -183,6 +183,44 @@ class TweetCard extends StatefulWidget {
 }
 
 class _TweetCardState extends State<TweetCard> {
+  bool isRetweeted = false;
+  int retweetCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    retweetCount = widget.snap['retweet']?.length ?? 0;
+    final User user = Provider.of<UserProvider>(context, listen: false).getUser;
+    isRetweeted = widget.snap['retweet']?.contains(user.uid) ?? false;
+  }
+
+  Future<void> handleRetweet() async {
+    final User user = Provider.of<UserProvider>(context, listen: false).getUser;
+    if (isRetweeted) {
+      // Remove retweet
+      await FirestoreMethods().doReTweet(
+        widget.snap['postId'],
+        user.uid,
+        widget.snap['retweet'],
+      );
+      setState(() {
+        isRetweeted = false;
+        retweetCount--;
+      });
+    } else {
+      // Add retweet
+      await FirestoreMethods().doReTweet(
+        widget.snap['postId'],
+        user.uid,
+        widget.snap['retweet'],
+      );
+      setState(() {
+        isRetweeted = true;
+        retweetCount++;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final User user = Provider.of<UserProvider>(context).getUser;
@@ -336,16 +374,17 @@ class _TweetCardState extends State<TweetCard> {
                       SizedBox(width: 20),
                       Expanded(
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed:
+                              handleRetweet, // Call handleRetweet on button press
                           icon: Icon(
                             Icons.repeat,
-                            color: Colors.white54,
+                            color: isRetweeted ? Colors.blue : Colors.white54,
                             size: 20,
                           ),
                         ),
                       ),
                       Text(
-                        '1',
+                        retweetCount.toString(),
                         style: TextStyle(color: Colors.grey),
                       ),
                       SizedBox(width: 20),
