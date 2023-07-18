@@ -90,4 +90,31 @@ class FirestoreMethods {
       print(e.toString());
     }
   }
+
+  Future<void> tweetComment(String postId, String text, String uid, String name,
+      String profilePic) async {
+    try {
+      if (text.isNotEmpty) {
+        String commentId = const Uuid().v1();
+        _firestore
+            .collection('posts')
+            .doc(postId)
+            .collection('comments')
+            .doc(commentId)
+            .set({
+          'commentId': commentId,
+          // 'postId': postId,
+          'text': text,
+          'uid': uid,
+          'name': name,
+          'profilePic': profilePic,
+          'datePublished': DateTime.now(),
+        });
+      } else {
+        print('text is empty');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }
