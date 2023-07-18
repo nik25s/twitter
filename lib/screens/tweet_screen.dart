@@ -50,13 +50,16 @@ class TweetScreen extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             }
+
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) => Container(
                   margin: EdgeInsets.symmetric(
                       horizontal: width > webScreenSize ? width * 0.3 : 0,
                       vertical: width > webScreenSize ? 15 : 0),
-                  child: TweetCard(snap: snapshot.data!.docs[index].data())),
+                  child: TweetCard(
+                    snap: snapshot.data!.docs[index].data(),
+                  )),
             );
           },
         ));

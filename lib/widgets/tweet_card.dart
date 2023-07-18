@@ -1,184 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter/resources/firestore_methods.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:twitter/screens/comment_screen.dart';
 import 'package:twitter/utils/global_variables.dart';
 import 'package:twitter/widgets/comment_card.dart';
 import 'package:twitter/widgets/like_animation.dart';
 import '../models/user.dart';
 import '../providers/user_providers.dart';
-
-// class TweetCard extends StatefulWidget {
-//   final snap;
-//   const TweetCard({required this.snap, super.key});
-
-//   @override
-//   State<TweetCard> createState() => _TweetCardState();
-// }
-
-// class _TweetCardState extends State<TweetCard> {
-//   @override
-//   Widget build(BuildContext context) {
-//     final User user = Provider.of<UserProvider>(context).getUser;
-//     final width = MediaQuery.of(context).size.width;
-//     return Container(
-//       margin: EdgeInsets.only(right: 33),
-//       // boundary needed for web
-//       decoration: BoxDecoration(
-//           border: Border.all(
-//               color: width > webScreenSize ? Colors.grey : Colors.black)),
-//       padding: const EdgeInsets.symmetric(vertical: 10),
-//       child: Row(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Container(
-//             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16)
-//                 .copyWith(right: 0),
-//             child: Container(
-//               child: CircleAvatar(
-//                 radius: 25,
-//                 backgroundImage: NetworkImage(user.photoUrl),
-//               ),
-//             ),
-//           ),
-//           const SizedBox(
-//             width: 10,
-//           ),
-//           Container(
-//             child: Expanded(
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.start,
-//                 children: [
-//                   Row(
-//                     children: [
-//                       Text(
-//                         user.username,
-//                         style: TextStyle(
-//                             color: Colors.white,
-//                             fontWeight: FontWeight.bold,
-//                             fontSize: 18),
-//                       ),
-//                       const SizedBox(
-//                         width: 5,
-//                       ),
-//                       Text(
-//                         '@${user.username}',
-//                         style: TextStyle(color: Colors.grey, fontSize: 16),
-//                       ),
-//                       const SizedBox(
-//                         width: 5,
-//                       ),
-//                       const SizedBox(
-//                         width: 5,
-//                       ),
-//                       Text(
-//                         '· 1h',
-//                         style: TextStyle(color: Colors.grey),
-//                       ),
-//                     ],
-//                   ),
-//                   const SizedBox(
-//                     height: 5,
-//                   ),
-//                   Text(
-//                     'This is a tweet hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',
-//                     style: TextStyle(color: Colors.white),
-//                     overflow: TextOverflow.ellipsis,
-//                     maxLines: 10,
-//                   ),
-//                   SizedBox(
-//                     height: 15,
-//                   ),
-//                   widget.snap['postUrl'] != null
-//                       ? SizedBox(
-//                           height: 250,
-//                           width: 300,
-//                           child: AspectRatio(
-//                             aspectRatio: 1,
-//                             child: Container(
-//                               decoration: BoxDecoration(
-//                                 borderRadius: BorderRadius.circular(18),
-//                                 border: Border.all(
-//                                   color: Colors
-//                                       .white, // Replace with your desired border color
-//                                   width:
-//                                       2.0, // Replace with your desired border width
-//                                 ),
-//                                 image: DecorationImage(
-//                                   image: NetworkImage(user.photoUrl),
-//                                   fit: BoxFit.fill,
-//                                   alignment: FractionalOffset.topCenter,
-//                                 ),
-//                               ),
-//                             ),
-//                           ))
-//                       : SizedBox(height: 5),
-//                   Padding(
-//                     padding: const EdgeInsets.only(right: 28.0),
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.start,
-//                       children: [
-//                         Expanded(
-//                           child: IconButton(
-//                               onPressed: () {},
-//                               icon: Icon(
-//                                 Icons.mode_comment_outlined,
-//                                 color: Colors.white54,
-//                                 size: 20,
-//                               )),
-//                         ),
-//                         Text(
-//                           '1',
-//                           style: TextStyle(color: Colors.grey),
-//                         ),
-//                         SizedBox(
-//                           width: 20,
-//                         ),
-//                         Expanded(
-//                           child: IconButton(
-//                               onPressed: () {},
-//                               icon: Icon(
-//                                 Icons.repeat,
-//                                 color: Colors.white54,
-//                                 size: 20,
-//                               )),
-//                         ),
-//                         Text(
-//                           '1',
-//                           style: TextStyle(color: Colors.grey),
-//                         ),
-//                         SizedBox(
-//                           width: 20,
-//                         ),
-//                         Expanded(
-//                           child: IconButton(
-//                               onPressed: () {},
-//                               icon: Icon(
-//                                 Icons.favorite_border,
-//                                 color: Colors.white54,
-//                                 size: 20,
-//                               )),
-//                         ),
-//                         Text(
-//                           '1',
-//                           style: TextStyle(color: Colors.grey),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
+import '../utils/pick_image.dart';
 
 class TweetCard extends StatefulWidget {
   final snap;
-  const TweetCard({required this.snap, Key? key});
+  const TweetCard({
+    required this.snap,
+    Key? key,
+  });
 
   @override
   State<TweetCard> createState() => _TweetCardState();
@@ -187,6 +24,7 @@ class TweetCard extends StatefulWidget {
 class _TweetCardState extends State<TweetCard> {
   bool isRetweeted = false;
   int retweetCount = 0;
+  int commentlen = 0;
 
   @override
   void initState() {
@@ -194,6 +32,21 @@ class _TweetCardState extends State<TweetCard> {
     retweetCount = widget.snap['retweet']?.length ?? 0;
     final User user = Provider.of<UserProvider>(context, listen: false).getUser;
     isRetweeted = widget.snap['retweet']?.contains(user.uid) ?? false;
+    getComments();
+  }
+
+  void getComments() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .collection('comments')
+          .get();
+      commentlen = snap.docs.length;
+    } catch (e) {
+      showSnackBar(e.toString(), context);
+    }
+    setState(() {});
   }
 
   Future<void> handleRetweet() async {
@@ -379,7 +232,7 @@ class _TweetCardState extends State<TweetCard> {
                             ),
                           ),
                           Text(
-                            '1',
+                            commentlen.toString(),
                             style: TextStyle(color: Colors.grey),
                           ),
                           SizedBox(width: 20),

@@ -50,8 +50,9 @@ class _CommentScreenState extends State<CommentScreen> {
           }
           return ListView.builder(
               itemCount: (snapshot.data! as dynamic).docs.length,
-              itemBuilder: ((context, index) =>
-                  CommentCard(snap: snapshot.data!.docs[index])));
+              itemBuilder: ((context, index) => CommentCard(
+                    snap: snapshot.data!.docs[index],
+                  )));
         },
       ),
       bottomNavigationBar: SafeArea(
