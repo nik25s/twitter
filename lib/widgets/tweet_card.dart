@@ -199,8 +199,7 @@ class _TweetCardState extends State<TweetCard> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(18),
                               border: Border.all(
-                                color: Colors.white,
-                                width: 2.0,
+                                color: Color.fromARGB(255, 58, 56, 56),
                               ),
                               image: DecorationImage(
                                 image: NetworkImage(widget.snap['postUrl']),
