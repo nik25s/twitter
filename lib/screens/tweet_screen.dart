@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:twitter/screens/profile_screen.dart';
 import 'package:twitter/utils/global_variables.dart';
 import 'package:twitter/widgets/tweet_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,9 +8,14 @@ import '../models/user.dart';
 import '../providers/user_providers.dart';
 import 'package:twitter/widgets/drawer_list.dart';
 
-class TweetScreen extends StatelessWidget {
+class TweetScreen extends StatefulWidget {
   const TweetScreen({super.key});
 
+  @override
+  State<TweetScreen> createState() => _TweetScreenState();
+}
+
+class _TweetScreenState extends State<TweetScreen> {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();

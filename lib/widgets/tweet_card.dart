@@ -35,6 +35,15 @@ class _TweetCardState extends State<TweetCard> {
     getComments();
   }
 
+  // if user name is to long so we'll trim it
+  String getDisplayUsername(String username) {
+    if (username.length > 5) {
+      return '@${username.substring(0, 4)}..';
+    } else {
+      return '@$username';
+    }
+  }
+
   void getComments() async {
     try {
       QuerySnapshot snap = await FirebaseFirestore.instance
@@ -122,7 +131,7 @@ class _TweetCardState extends State<TweetCard> {
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          '@${user.username}',
+                          getDisplayUsername(user.username),
                           style: TextStyle(color: Colors.grey, fontSize: 16),
                         ),
                         const SizedBox(width: 5),
@@ -162,7 +171,7 @@ class _TweetCardState extends State<TweetCard> {
                                     )));
                           },
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 118.0),
+                            padding: const EdgeInsets.only(left: 30.0),
                             child: Icon(
                               Icons.more_horiz,
                               size: 18,

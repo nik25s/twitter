@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:twitter/resources/storage_methods.dart';
 import 'package:twitter/resources/storage_methods.dart';
 import 'package:twitter/models/user.dart' as model;
 
